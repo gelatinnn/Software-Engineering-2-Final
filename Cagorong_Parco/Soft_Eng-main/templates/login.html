@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Login</title>
+    <style>
+        .form-group {
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px 40px 10px 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+            color: #888;
+        }
+
+        .toggle-password:hover {
+            color: #333;
+        }
+
+        .login-button,
+        .register-button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .login-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .flash-messages {
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #2ecc71;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            animation: fadeOut 5s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .forgot-password {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    {% if 'username' in session %}
+    <header>
+        <a href="{{ url_for('home') }}" class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        </a>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('database') }}">Database</a>
+            <a href="{{ url_for('prediction') }}">Prediction</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash-message {{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="wrapper">
+        <div class="login-container">
+            <h2>Login</h2>
+            <form action="{{ url_for('login') }}" method="post">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required class="input-field">
+                    <i class="fas fa-eye toggle-password" id="toggleEye"></i>
+                </div>
+                <button type="submit" class="login-button" id="loginButton" disabled>Login</button>
+            </form>
+            <button class="register-button" onclick="window.location.href='{{ url_for('register') }}'">Register</button>
+            <p class="login-link forgot-password">Forgot your password? <a href="{{ url_for('forgot_password') }}">Click here</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const usernameInput = document.querySelector("#username");
+            const passwordInput = document.querySelector("#password");
+            const loginButton = document.querySelector("#loginButton");
+            const togglePassword = document.querySelector("#toggleEye");
+    
+            // Function to check inputs and enable login button
+            const checkInputs = () => {
+                loginButton.disabled = !(usernameInput.value.trim() && passwordInput.value.trim());
+            };
+    
+            // Toggle password visibility
+            togglePassword.addEventListener("click", function () {
+                const isPasswordHidden = passwordInput.type === "password";
+                passwordInput.type = isPasswordHidden ? "text" : "password";
+    
+                // Toggle eye icon correctly
+                this.classList.toggle("fa-eye", isPasswordHidden);
+                this.classList.toggle("fa-eye-slash", !isPasswordHidden);
+            });
+    
+            // Event listeners to check inputs
+            usernameInput.addEventListener("input", checkInputs);
+            passwordInput.addEventListener("input", checkInputs);
+    
+            // Auto-hide flash messages after 4 seconds
+            setTimeout(() => {
+                document.querySelectorAll(".flash-message").forEach(msg => msg.style.display = "none");
+            }, 4000);
+        });
+    </script>
+    
+</body>
+
+</html>

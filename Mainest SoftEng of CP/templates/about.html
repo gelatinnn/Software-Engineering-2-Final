@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/about.css">
+    <title>About</title>
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('home') }}" class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        </a>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('database') }}">Database</a>
+            <a href="{{ url_for('prediction') }}">Prediction</a>
+            {% if 'username' in session %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+        <section class="about-container">
+            <h1>About Us</h1>
+            <div class="team-photo">
+                <div class="team-member">
+                    <img src="{{ url_for('static', filename='img/rigel.jpg') }}" alt="Rigel Parco">
+                    <div class="team-name">Rigel Parco</div>
+                </div>
+                <div class="team-member">
+                    <img src="{{ url_for('static', filename='img/jane.jpg') }}" alt="Jane Cagorong">
+                    <div class="team-name">Jane Cagorong</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mission-container">
+            <h2>Our Mission</h2>
+            <p>
+                The Mission of Derma Diagnose is to provide a reliable platform for the categorization of skin disorders. 
+                Our goal is to provide medical professionals with the resources they need to correctly diagnose and classify skin conditions. 
+                In order to improve diagnosis and treatment, we want to offer a quicker, more precise, 
+                and simpler method for classifying dermatological conditions utilizing modern technology.
+            </p>
+        </section>
+
+        <section class="vision-container">
+            <h2>Our Vision</h2>
+            <p>
+                Our vision at Derma Diagnose is to use machine learning prediction to enhance the classification of 
+                dermatological diseases. Through the use of machine learning algorithms like Logistic Regression, 
+                we help medical practitioners identify skin issues quickly, allowing for faster and precise treatment.
+                 Our objective is to make these technologies easy to use so that physicians can treat patients more quickly and accurately.
+            </p>
+        </section>
+    </main>
+
+
+<footer>
+    <p>&copy; 2024 DermaDiagnose. All rights reserved.</p>
+</footer>
+</body>
+</html>

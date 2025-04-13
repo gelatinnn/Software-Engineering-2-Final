@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <title>Derma - Skin Disease Detection</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: url("{{ url_for('static', filename='img/background.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding: 20px;
+            color: white;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar:hover {
+            width: 300px;
+        }
+
+        .sidebar .logo img {
+            width: 100%;
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar nav a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar nav a:hover {
+            background: #3498db;
+            transform: scale(1.05);
+        }
+
+        .logout-btn {
+            background-color: #e74c3c;
+        }
+
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            margin-left: 250px;
+            padding: 60px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .main-content img.center-logo {
+            width: 200px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            max-width: 700px;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        .login-button {
+            display: inline-block;
+            padding: 14px 25px;
+            background: #2ecc71;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .login-button:hover {
+            background: #27ae60;
+            transform: scale(1.1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="DermAI Logo">
+        </div>
+        <nav>
+            <a href="{{ url_for('home') }}">🏠 Home</a>
+            <a href="{{ url_for('about') }}">📖 About Us</a>
+            <a href="{{ url_for('database') }}">📂 Database</a>
+            <a href="{{ url_for('prediction') }}">🔍 Prediction</a>
+            {% if 'username' in session %}
+                <a href="{{ url_for('logout') }}" class="logout-btn">🚪 Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="login-btn">🔐 Login</a>
+            {% endif %}
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="DermAI Logo" class="center-logo">
+        <h1>Welcome to Derma</h1>
+        <p>Empowering medical practitioners with AI-driven skin disease diagnostics. Early detection can save lives, and our technology helps make accurate diagnoses easier.</p>
+        {% if 'username' not in session %}
+            <a href="{{ url_for('login') }}" class="login-button">Get Started</a>
+        {% endif %}
+    </div>
+
+</body>
+</html>

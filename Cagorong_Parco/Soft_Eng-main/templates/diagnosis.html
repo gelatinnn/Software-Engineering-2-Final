@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/diagnosis.css') }}">
+    <title>Diagnosis</title>
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('home') }}" class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        </a>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('database') }}">Database</a>
+            <a href="{{ url_for('prediction') }}">Prediction</a>
+            {% if 'username' in session %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="derma-container">
+        <h1>Diagnosis Result</h1>
+        <div class="patient-details">
+            <h2>Patient Details</h2>
+            <p><strong>Name:</strong> {{ name }}</p>
+            <p><strong>Age:</strong> {{ age }}</p>
+            <p><strong>Sex:</strong> {{ sex }}</p>
+            <p><strong>Address:</strong> {{ address }}</p>
+        </div>
+        <div class="diagnosis-result">
+            <h2>Diagnosis</h2>
+            <p><strong>Condition:</strong> {{ derma }}</p>
+        </div>
+        <p>Thank you for using our service!</p>
+    </main>   
+</body>
+</html>

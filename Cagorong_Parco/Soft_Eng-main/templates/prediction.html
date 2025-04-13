@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/prediction.css') }}">
+    <title>Prediction</title>
+    
+    <style>
+         /* Header Styling */
+         header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            box-shadow: 0 4px 8px rgba(253, 253, 253, 0.3);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+    
+        .logo img {
+            height: 50px;
+        }
+    
+        nav {
+            display: flex;
+            gap: 15px;
+        }
+    
+        nav a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+    
+        nav a:hover {
+            background-color: #3498db;
+            color: white;
+            transform: scale(1.05);
+        }
+    
+        nav a:active {
+            transform: scale(0.95);
+        }
+    
+        /* Logout Button */
+        .logout-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+    
+        .logout-btn:hover {
+            background-color: #c0392b;
+        }
+    
+        .mission-vision-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+    
+        .mission-container, .vision-container {
+            width: 45%;
+        }
+    
+        .mission-container p, .vision-container p {
+            text-align: justify;
+        }
+    
+        /* Ensures content doesn't get hidden under fixed header */
+        body {
+            padding-top: 80px;
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('home') }}" class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        </a>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('database') }}">Database</a>
+            <a href="{{ url_for('prediction') }}">Prediction</a>
+            {% if 'username' in session %}
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+    <div class="scroll-container">
+    <h1>Dermatological Condition Classification</h1>
+    <form id="predictionForm" action="{{ url_for('prediction') }}" method="post">
+    <div class="scrollable-symptoms">
+            <div class="form-group">
+                <div class="form-control">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required><br><br>
+        
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" required><br><br>
+        
+                    <label for="address">Address:</label>
+                    <input type="text" id="address" name="address" required><br><br>
+
+                    <label for="sex">Sex:</label>
+                    <select id="sex" name="sex" required>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select><br><br>
+                </div>
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Erythema refers to redness of the skin, with 0 being no redness and 3 being severe redness.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Erythema(0-3)" name="Erythema" required autofocus>
+            
+            <datalist id="numbers">
+                <option value="0">
+                <option value="1">
+                <option value="2">
+                <option value="3">
+            </datalist>
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Scaling refers to the shedding of the outer layer of the skin, with 0 being no scaling and 3 being severe scaling.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Scaling(0-3)" name="Scaling" required>
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Definite Borders refers to the clear demarcation of the affected skin area, with 0 being no definite borders and 3 being well-defined borders.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Definite Borders(0-3)" name="definite_borders" required>
+
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Itching refers to the sensation of irritation on the skin, with 0 being no itching and 3 being severe itching.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Itching(0-3)" name="itching" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Koebner Phenomenon refers to the development of skin lesions at the site of injury or trauma, with 0 being no reaction and 3 being severe reaction.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Koebner Phenomenon(0-3)" name="koebner_phenomenon" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Polygonal Papules refers to raised, flat-topped bumps on the skin, with 0 being no papules and 3 being severe papules.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Polygonal Papules(0-3)" name="polygonal_papules" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Follicular Papules refers to small, raised lesions around hair follicles, with 0 being no papules and 3 being severe papules.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Follicular Papules(0-3)" name="follicular_papules" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Oral Mucosal Involvement refers to the presence of skin lesions in the mouth, with 0 being no involvement and 3 being severe involvement.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Oral Mucosal Involvement(0-3)" name="oral_mucosal_involvement" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Presence of skin lesions on the knees and elbows. Score 0: No involvement. Score 1: Mild involvement. Score 2: Moderate involvement. Score 3: Severe involvement.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Knee and Elbow Involvement(0-3)" name="knee_and_elbow_involvement" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Presence of skin lesions on the scalp. Score 0: No involvement. Score 1: Mild involvement. Score 2: Moderate involvement. Score 3: Severe involvement.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Scalp Involvement(0-3)" name="scalp_involvement" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Melanin Incontinence refers to the deposition of melanin pigment in the dermis. Score 0: No melanin incontinence. Score 1: Mild melanin incontinence. Score 2: Moderate melanin incontinence. Score 3: Severe melanin incontinence.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Melanin Incontinence(0-3)" name="melanin_incontinence" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Eosinophils Infiltrate refers to the presence of eosinophils in the dermis. Score 0: No eosinophils infiltrate. Score 1: Mild eosinophils infiltrate. Score 2: Moderate eosinophils infiltrate. Score 3: Severe eosinophils infiltrate.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Eosinophils Infiltrate(0-3)" name="eosinophils_infiltrate" required>
+        
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">PNL Infiltrate refers to the presence of polymorphonuclear leukocytes in the dermis. Score 0: No PNL infiltrate. Score 1: Mild PNL infiltrate. Score 2: Moderate PNL infiltrate. Score 3: Severe PNL infiltrate.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="PNL Infiltrate(0-3)" name="PNL_infiltrate" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Fibrosis Papillary Dermis refers to the fibrotic changes in the papillary dermis. Score 0: No fibrosis. Score 1: Mild fibrosis. Score 2: Moderate fibrosis. Score 3: Severe fibrosis.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Fibrosis Papillary Dermis(0-3)" name="fibrosis_papillary_dermis" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Exocytosis refers to the migration of inflammatory cells into the epidermis. Score 0: No exocytosis. Score 1: Mild exocytosis. Score 2: Moderate exocytosis. Score 3: Severe exocytosis.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Exocytosis(0-3)" name="exocytosis" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Acanthosis refers to the thickening of the epidermis. Score 0: No acanthosis. Score 1: Mild acanthosis. Score 2: Moderate acanthosis. Score 3: Severe acanthosis.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Acanthosis(0-3)" name="acanthosis" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Hyperkeratosis refers to the thickening of the stratum corneum (outer layer of the epidermis). Score 0: No hyperkeratosis. Score 1: Mild hyperkeratosis. Score 2: Moderate hyperkeratosis. Score 3: Severe hyperkeratosis.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Hyperkeratosis(0-3)" name="hyperkeratosis" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Parakeratosis refers to the retention of nuclei in the stratum corneum. Score 0: No parakeratosis. Score 1: Mild parakeratosis. Score 2: Moderate parakeratosis. Score 3: Severe parakeratosis.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Parakeratosis(0-3)" name="parakeratosis" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Clubbing Rete Ridges refers to the thickening of the rete ridges in the epidermis. Score 0: No clubbing rete ridges. Score 1: Mild clubbing rete ridges. Score 2: Moderate clubbing rete ridges. Score 3: Severe clubbing rete ridges.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Clubbing Rete Ridges(0-3)" name="clubbing_rete_ridges" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Elongation Rete Ridges refers to the elongation of the rete ridges in the epidermis. Score 0: No elongation rete ridges. Score 1: Mild elongation rete ridges. Score 2: Moderate elongation rete ridges. Score 3: Severe elongation rete ridges.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Elongation Rete Ridges(0-3)" name="elongation_rete_ridges" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Thinning Suprapapillary Epidermis refers to the thinning of the suprapapillary epidermis. Score 0: No thinning suprapapillary epidermis. Score 1: Mild thinning suprapapillary epidermis. Score 2: Moderate thinning suprapapillary epidermis. Score 3: Severe thinning suprapapillary epidermis.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Thinning Suprapapillary Epidermis(0-3)" name="thinning_suprapapillary_epidermis" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Spongiform Pustule refers to the presence of pustules with spongiosis in the epidermis. Score 0: No spongiform pustule. Score 1: Mild spongiform pustule. Score 2: Moderate spongiform pustule. Score 3: Severe spongiform pustule.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Spongiform Pustule(0-3)" name="spongiform_pustule" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Munro Microabcess refers to the collection of neutrophils in the epidermis. Score 0: No Munro microabcess. Score 1: Mild Munro microabcess. Score 2: Moderate Munro microabcess. Score 3: Severe Munro microabcess.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Munro Microabcess(0-3)" name="munro_microabcess" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Focal Hypergranulosis refers to the localized thickening of the granular layer of the epidermis. Score 0: No focal hypergranulosis. Score 1: Mild focal hypergranulosis. Score 2: Moderate focal hypergranulosis. Score 3: Severe focal hypergranulosis.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Focal Hypergranulosis(0-3)" name="focal_hypergranulosis" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Disappearance Granular Layer refers to the loss or thinning of the granular layer of the epidermis. Score 0: No disappearance of the granular layer. Score 1: Mild disappearance of the granular layer. Score 2: Moderate disappearance of the granular layer. Score 3: Severe disappearance of the granular layer.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Disappearance Granular Layer(0-3)" name="disappearance_granular_layer" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Vacuolisation Damage Basal Layer refers to the damage or alteration of the basal layer of the epidermis. Score 0: No vacuolisation damage to the basal layer. Score 1: Mild vacuolisation damage to the basal layer. Score 2: Moderate vacuolisation damage to the basal layer. Score 3: Severe vacuolisation damage to the basal layer.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Vacuolisation Damage Basal Layer(0-3)" name="vacuolisation_damage_basal_layer" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Spongiosis refers to the accumulation of fluid in the epidermis, leading to intercellular edema. Score 0: No spongiosis. Score 1: Mild spongiosis. Score 2: Moderate spongiosis. Score 3: Severe spongiosis.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Spongiosis(0-3)" name="spongiosis" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Saw Tooth Appearance Retes refers to the saw-toothed appearance of the rete ridges in the epidermis. Score 0: No saw tooth appearance. Score 1: Mild saw tooth appearance. Score 2: Moderate saw tooth appearance. Score 3: Severe saw tooth appearance.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Saw Tooth Appearance Retes(0-3)" name="saw_tooth_appearance_retes" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Follicular Horn Plug refers to the keratinous plugs that block hair follicles. Score 0: No follicular horn plug. Score 1: Mild follicular horn plug. Score 2: Moderate follicular horn plug. Score 3: Severe follicular horn plug.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Follicular Horn Plug(0-3)" name="follicular_horn_plug" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Perifollicular Parakeratosis refers to the presence of parakeratosis around hair follicles. Score 0: No perifollicular parakeratosis. Score 1: Mild perifollicular parakeratosis. Score 2: Moderate perifollicular parakeratosis. Score 3: Severe perifollicular parakeratosis.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Perifollicular Parakeratosis(0-3)" name="perifollicular_parakeratosis" required>
+            
+
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Inflammatory Mononuclear Infiltrate refers to the infiltration of mononuclear cells in the affected tissue. Score 0: No inflammatory mononuclear infiltrate. Score 1: Mild inflammatory mononuclear infiltrate. Score 2: Moderate inflammatory mononuclear infiltrate. Score 3: Severe inflammatory mononuclear infiltrate.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Inflammatory Mononuclear Infiltrate(0-3)" name="inflammatory_mononuclear_infiltrate" required>
+            
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Band Like Infiltrate refers to the infiltration of cells in a band-like pattern in the dermis. Score 0: No band-like infiltrate. Score 1: Mild band-like infiltrate. Score 2: Moderate band-like infiltrate. Score 3: Severe band-like infiltrate.</span>
+            </div>
+            <input list="numbers" class="form-control" placeholder="Band Like Infiltrate(0-3)" name="band_like_infiltrate" required>
+            
+            <div class="tooltip">
+                <button class="tooltip-button">Info</button>
+                <span class="tooltip-text">Presence of family history of dermatological diseases. Score 0: No family history. Score 1: Positive family history.</span>
+            </div>
+            <input list="family_history" class="form-control" placeholder="Family History(0-1)" name="family_history" required>
+            
+            <datalist id="family_history">
+                <option value="0">
+                <option value="1">
+            </datalist>
+            
+            <input type="submit" value="Predict" class="btn btn-primary">
+        </div>
+        </form>
+    </div>
+</body>
+</html>

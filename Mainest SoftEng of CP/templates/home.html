@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <title>Homepage</title>
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('home') }}" class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        </a>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('about') }}">About Us</a>
+            <a href="{{ url_for('database') }}">Database</a>
+            <a href="{{ url_for('prediction') }}">Prediction</a>
+            {% if 'username' in session %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+    <div class="logo-container">
+        <div class="logo1">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        </div>
+        <div class="logo2">
+            <img src="{{ url_for('static', filename='img/logo2.png') }}" alt="Logo2">
+        </div>
+    </div>
+    <hr>
+    <p>A considerable proportion of the world’s population is afflicted by dermatological problems; 
+        estimates range from 30% to 70% for all skin diseases. The goal of this initiative 
+        is to help medical practitioners diagnose skin diseases more accurately.</p>
+    {% if 'username' not in session %}
+        <a href="{{ url_for('login') }}" class="login-button">Login</a>
+    {% endif %}     
+</body>
+</html>
